@@ -79,12 +79,30 @@
     //
     // test if a specific row on this board contains a conflict
     hasRowConflictAt: function(rowIndex) {
-      return false; // fixme
+      var numInRow = 0;
+      var arr = this.get(rowIndex);
+      for(var i = 0; i < arr.length; i++){
+        if (arr[i] === 1) {
+          numInRow++;
+        }
+      }
+      if(numInRow > 1) {
+        return true;
+      }
+
+      return false; 
     },
 
     // test if any rows on this board contain conflicts
     hasAnyRowConflicts: function() {
-      return false; // fixme
+      var cols = this.get('n');
+      var hasCon = false;
+      for(var i = 0; i < cols; i++){
+        if(this.hasRowConflictAt(i)){
+          return true;
+        }
+      }
+      return hasCon; // fixme
     },
 
 
@@ -94,12 +112,30 @@
     //
     // test if a specific column on this board contains a conflict
     hasColConflictAt: function(colIndex) {
+      var colCount = 0;
+      var rows = this.get(colIndex).length;
+
+      for(var i = 0; i < rows; i++) {
+        colCount += this.get(i)[colIndex];
+      }
+
+      if(colCount > 1){
+        return true;
+      }
+
       return false; // fixme
     },
 
     // test if any columns on this board contain conflicts
     hasAnyColConflicts: function() {
-      return false; // fixme
+      var rows = this.get('n');
+      var hasCon = false;
+      for(var i = 0; i < rows; i++){
+        if(this.hasColConflictAt(i)){
+          return true;
+        }
+      }
+      return hasCon; // fixme
     },
 
 
@@ -109,6 +145,38 @@
     //
     // test if a specific major diagonal on this board contains a conflict
     hasMajorDiagonalConflictAt: function(majorDiagonalColumnIndexAtFirstRow) {
+      var size = this.get('n');
+      var start = majorDiagonalColumnIndexAtFirstRow;
+      var iterations = size - Math.abs(start)
+      var index = 0
+      var row = 0
+      var counter = 0
+      /* 
+    x x x x x
+      x x x x
+      x x x x
+      x x x x
+      start = 0
+      size = 4
+      itear = 4
+      row = 0
+      counter 0
+      */
+      if(!this._isInBounds(0, start)){
+        row = -1 * start;
+        start = 0; 
+      }
+
+      for(var i = start; i < iterations + start; i++){
+        if(this.get(row)[start] === 1){
+          counter++;
+        }
+        if(counter > 1){
+          return true;
+        }
+
+      }
+      
       return false; // fixme
     },
 
