@@ -20,24 +20,22 @@ window.findNRooksSolution = function(n) {
 
   var findSolns = function(n, curBoard, rookCount = 0) {
     var solution = curBoard || new Board({n: n}); //fixme
+    var curRooks = rookCount;
     
     for (var column = 0; column < n; column++) {
-      solution.togglePiece(rookCount, column);
+      curRooks = rookCount;
+      solution.togglePiece(curRooks, column);
       if (solution.hasAnyRooksConflicts()) {
-        solution.togglePiece(rookCount, column);
-        if (rookCount === 1) {
-          debugger;
-        }
+        solution.togglePiece(curRooks, column);
       } else {
-        rookCount++;
-        if (rookCount === n) {
+        curRooks++;
+        if (curRooks === n) {
           solnArray.push(solution);
-          rookCount--;
           //console.log(solution);
         } else {
          // console.log(solution);
 
-          findSolns(n, solution, rookCount);
+          findSolns(n, solution, curRooks);
         }
       }
     }
@@ -45,19 +43,45 @@ window.findNRooksSolution = function(n) {
 
   findSolns(n);
   console.log(solnArray);
-    console.log('Single solution for ' + n + ' rooks:', JSON.stringify(solnArray[0].rows()));
+  console.log('Single solution for ' + n + ' rooks:', JSON.stringify(solnArray[0].rows()));
   return solnArray[0].rows();
 };
 
 // return the number of nxn chessboards that exist, with n rooks placed such that none of them can attack each other
-window.countNRooksSolutions = function(n, board) {
-  var solution = board || new Board({n: n}); //fixme
-  var solutionCount;
+window.countNRooksSolutions = function(n) {
+  var solnArray = [];  
+  var findSolns = function(n, curBoard, rookCount = 0) {
+    var solution = curBoard || new Board({n: n}); //fixme
+    var curRooks = rookCount;
+    // debugger;
+    for (var column = 0; column < n; column++) {
+      solution.togglePiece(curRooks, column);
+      if (solution.hasAnyRooksConflicts()) {
+        solution.togglePiece(curRooks, column);
+      } else {
+        curRooks++;
+        if (curRooks === n) {
+          solnArray.push(solution);
+          curRooks--;
+          solution.togglePiece(curRooks, column);
+          //console.log(solution);
+        } else {
+         // console.log(solution);
 
+          findSolns(n, solution, curRooks);
+          curRooks--;
+          solution.togglePiece(curRooks, column);
+        }
+      }
+    }
+  };
 
+  findSolns(n);
 
-  console.log('Number of solutions for ' + n + ' rooks:', solutionCount);
-  return solutionCount;
+  console.log(solnArray);
+
+  console.log('Number of solutions for ' + n + ' rooks:', solnArray.length);
+  return solnArray.length;
 };
 
 // return a matrix (an array of arrays) representing a single nxn chessboard, with n queens placed such that none of them can attack each other
