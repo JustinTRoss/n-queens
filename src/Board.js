@@ -115,11 +115,11 @@
       var colCount = 0;
       var rows = this.get(colIndex).length;
 
-      for(var i = 0; i < rows; i++) {
+      for (var i = 0; i < rows; i++) {
         colCount += this.get(i)[colIndex];
       }
 
-      if(colCount > 1){
+      if (colCount > 1) {
         return true;
       }
 
