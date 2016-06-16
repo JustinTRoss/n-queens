@@ -31,10 +31,7 @@ window.findNRooksSolution = function(n) {
         curRooks++;
         if (curRooks === n) {
           solnArray.push(solution);
-          //console.log(solution);
         } else {
-         // console.log(solution);
-
           findSolns(n, solution, curRooks);
         }
       }
@@ -61,7 +58,10 @@ window.countNRooksSolutions = function(n) {
       } else {
         curRooks++;
         if (curRooks === n) {
-          solnArray.push(solution);
+          var mappedSoln = solution.rows().slice().map(function(valAry) {
+            return valAry.slice();
+          });
+          solnArray.push(mappedSoln);
           curRooks--;
           solution.togglePiece(curRooks, column);
           //console.log(solution);
@@ -86,16 +86,98 @@ window.countNRooksSolutions = function(n) {
 
 // return a matrix (an array of arrays) representing a single nxn chessboard, with n queens placed such that none of them can attack each other
 window.findNQueensSolution = function(n) {
-  var solution = undefined; //fixme
+  var solnArray = []; 
+  var findSolns = function(n, curBoard, queenCount = 0) {
+    var solution = curBoard || new Board({n: n}); //fixme
+    var curQueens = queenCount;
+    if (n === 1) {
+    //  debugger;
+    }
+    for (var column = 0; column < n; column++) {
+      solution.togglePiece(curQueens, column);
+      if (solution.hasAnyQueensConflicts()) {
+        solution.togglePiece(curQueens, column);
+      } else {
+        curQueens++;
+        if (curQueens === n) {
+          var mappedSoln = solution.rows().slice().map(function(valAry) {
+            return valAry.slice();
+          });
+          solnArray.push(mappedSoln);
+          curQueens--;
+          solution.togglePiece(curQueens, column);
+          //console.log(solution);
+        } else {
+         // console.log(solution);
 
-  console.log('Single solution for ' + n + ' queens:', JSON.stringify(solution));
-  return solution;
+          findSolns(n, solution, curQueens);
+          curQueens--;
+          solution.togglePiece(curQueens, column);
+        }
+      }
+    }
+  };
+
+  findSolns(n);
+
+  console.log(solnArray);
+  var returnVal = solnArray[0];
+  if (solnArray.length === 0) {
+    if (n === 0) {
+      returnVal = [];
+    } else {
+      returnVal = {n: n};
+    }
+  }
+  console.log(returnVal);
+  console.log('Single solution for ' + n + ' queens:', JSON.stringify(returnVal));
+  return returnVal;
 };
 
 // return the number of nxn chessboards that exist, with n queens placed such that none of them can attack each other
 window.countNQueensSolutions = function(n) {
-  var solutionCount = undefined; //fixme
+  var solnArray = []; 
+  var findSolns = function(n, curBoard, queenCount = 0) {
+    var solution = curBoard || new Board({n: n}); //fixme
+    var curQueens = queenCount;
+    if (n === 1) {
+    //  debugger;
+    }
+    for (var column = 0; column < n; column++) {
+      solution.togglePiece(curQueens, column);
+      if (solution.hasAnyQueensConflicts()) {
+        solution.togglePiece(curQueens, column);
+      } else {
+        curQueens++;
+        if (curQueens === n) {
+          var mappedSoln = solution.rows().slice().map(function(valAry) {
+            return valAry.slice();
+          });
+          solnArray.push(mappedSoln);
+          curQueens--;
+          solution.togglePiece(curQueens, column);
+          //console.log(solution);
+        } else {
+         // console.log(solution);
 
-  console.log('Number of solutions for ' + n + ' queens:', solutionCount);
-  return solutionCount;
+          findSolns(n, solution, curQueens);
+          curQueens--;
+          solution.togglePiece(curQueens, column);
+        }
+      }
+    }
+  };
+
+  findSolns(n);
+
+  var returnVal = solnArray.length;
+  if (solnArray.length === 0) {
+    if (n <= 1) {
+      returnVal = 1;
+    } else {
+      returnVal = 0;
+    }
+  }
+
+  return returnVal;
 };
